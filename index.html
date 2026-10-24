@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Candlewit – a cinematic 3D Halloween séance quiz</title>
+<meta name="description" content="A midnight séance quiz in real 3D: the crystal ball asks, you light the right candle. Five right in a row and the spirit storm blows the roof off. Streaks, three jokers, a ticking candle clock, the Midnight Round against a giant spectre, Easy/Medium/Hard, a kids mode, Endless Séance and a Player 1 vs Player 2 duel. English and German.">
+<meta name="theme-color" content="#07071a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Candlewit – a 3D Halloween séance quiz">
+<meta property="og:description" content="Light the right candle. Five in a row and the spirit storm blows the roof off. Built with Grok Bot.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Candlewit">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%95%AF%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-state="intro">
+<canvas id="game" aria-label="Candlewit game"></canvas>
+<div id="flash"></div>
+<div id="pops"></div>
+<div id="banner"></div>
+<div id="hud">
+  <div class="chip wide"><small data-t="qLab">Question</small><b id="hQ">1</b></div>
+  <div class="chip gold"><small data-t="scoreL">Score</small><b id="hScore">0</b></div>
+  <div class="chip"><small data-t="streakL">Streak</small><b id="hStreak">×1</b></div>
+  <div class="chip"><small data-t="flamesL">Flames</small><b id="hLives">🕯🕯🕯</b></div>
+</div>
+<div id="spirit" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" class="bg"/><circle id="spiritArc" cx="20" cy="20" r="16" class="fg"/></svg><span id="spiritN">0/5</span></div>
+<div id="top">
+  <button id="btnQuit" class="pill" aria-label="Menu">✕</button>
+  <button id="btnSound" class="pill" aria-label="Sound">🔊</button>
+  <button id="btnLang" class="pill">DE</button>
+  <button id="btnGear" class="pill" aria-haspopup="dialog" aria-expanded="false" aria-label="Options">⚙</button>
+</div>
+<div id="toast"></div>
+<div id="lvCard"><small id="lcT"></small><div id="lcG"></div><em id="lcTip"></em></div>
+<div id="qcard"><small id="qMeta"></small><div id="qText"></div><i id="qTime"><b id="qTimeFill"></b></i></div>
+<div id="play">
+  <div id="jokers">
+    <button id="jGust" class="joker" data-k="gust"><b>🌬</b><span data-t="j_gust"></span></button>
+    <button id="jFrost" class="joker" data-k="frost"><b>❄</b><span data-t="j_frost"></span></button>
+    <button id="jSwap" class="joker" data-k="swap"><b>🦇</b><span data-t="j_swap"></span></button>
+  </div>
+  <div id="answers">
+    <button class="ans" data-i="0"><i>☾</i><span></span></button>
+    <button class="ans" data-i="1"><i>✶</i><span></span></button>
+    <button class="ans" data-i="2"><i>✦</i><span></span></button>
+    <button class="ans" data-i="3"><i>◆</i><span></span></button>
+  </div>
+</div>
+<div id="opening"><div id="oTitle"><span class="w1">CANDLE</span><span class="w2">WIT</span><div id="oSub">4 days to Halloween 🎃</div></div></div>
+<button id="btnSkip" class="pill tapPlay">▶ Tap to play</button>
+<section id="menu" class="panel">
+  <div class="mTop">
+    <div class="kicker" data-t="countdown"></div>
+    <h1><span class="w1">CANDLE</span><span class="w2">WIT</span></h1>
+    <p class="sub" data-t="tagline"></p>
+  </div>
+  <div class="mPlay">
+    <button id="btnPlay" class="play"><span class="pl" data-t="play"></span><em id="playL"></em></button>
+    <p class="tip credit" data-t="credit"></p>
+  </div>
+</section>
+<div id="moreBg"></div>
+<section id="more" class="panel" role="dialog" aria-labelledby="moreT">
+  <div class="sheetHead"><b id="moreT" data-t="moreT"></b><button id="btnMoreX" class="pill" aria-label="Close">✕</button></div>
+  <div class="row rowModes"><button id="btnEndless" class="big alt"><span data-t="endless"></span><em data-t="endlessInfo"></em></button><button id="btnDuel" class="big alt2"><span data-t="duel"></span><em data-t="duelInfo"></em></button></div>
+  <div class="lab labDiff" data-t="diffL"></div>
+  <div id="diff" role="group"><button data-d="easy" data-t="easy"></button><button data-d="medium" data-t="medium"></button><button data-d="hard" data-t="hard"></button></div>
+  <div class="row rowKids"><button id="btnKids" class="toggle" aria-pressed="false"><i></i><span data-t="kids"></span></button></div>
+  <div class="row rowOpt"><button id="btnQ2" class="opt"></button><button id="btnSound2" class="opt"></button><button id="btnIntro" class="opt" data-t="replay"></button></div>
+  <p class="tip kidsTip" data-t="kidsInfo"></p>
+  <p class="tip how"><span data-t="how1"></span> <span data-t="how2"></span> <span data-t="how3"></span></p>
+  <p class="tip keys" id="keysTip"></p>
+</section>
+<section id="handover" class="panel">
+  <div class="kicker" data-t="duelT"></div>
+  <h2 id="hoT"></h2>
+  <p class="sub" id="hoS"></p>
+  <button id="btnGo" class="big" data-t="duelGo"></button>
+</section>
+<section id="end" class="panel">
+  <div class="kicker" id="eMode"></div>
+  <h2 id="eTitle"></h2>
+  <div id="eScore" class="score">0</div>
+  <div id="eStars" class="stars"></div>
+  <div id="eBest" class="best"></div>
+  <div id="eStats" class="stats"></div>
+  <label class="name" id="eNameRow"><span data-t="nameL">Name on the card</span><input id="eName" maxlength="18" value="Player" autocomplete="off"></label>
+  <div class="row"><button id="btnCard" data-t="card"></button><button id="btnShare" data-t="share"></button></div>
+  <div class="row"><button id="btnAgain" class="big alt" data-t="again"></button><button id="btnMenu" data-t="menu"></button></div>
+</section>
+<script src="js/sounds-src.js"></script>
+<script src="js/game.bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+node_modules/
+.sfx/
+test/shots/
+test/last-run.log
+test/last-mobile-run.log
+QUIZ-PROGRESS.md
+test/exit.txt
